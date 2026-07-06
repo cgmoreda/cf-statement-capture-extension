@@ -65,6 +65,14 @@ npm run package
 
 The package command writes a clean extension ZIP under `dist/` using an explicit allowlist. It excludes `.git/`, `.lavish/`, local downloads, and generated review artifacts.
 
+## Release
+
+Release notes for the current private testing build are in [docs/RELEASE_NOTES_v0.2.0.md](docs/RELEASE_NOTES_v0.2.0.md).
+
+Chrome Web Store listing and permission text are drafted in [docs/CHROME_WEB_STORE.md](docs/CHROME_WEB_STORE.md).
+
+GitHub Actions validates icon generation, smoke checks, JS syntax checks, and packaging on pushes and pull requests to `main`.
+
 ## Release Status
 
 This repository is pre-release. The extension is not yet submitted to the Chrome Web Store.
