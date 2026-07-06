@@ -13,9 +13,16 @@ const MESSAGE = {
 const activePrintSessions = new Map();
 const completedPrintMessages = new Map();
 const runningExports = new Map();
+const EXPORT_STORAGE_PREFIX = "cfStatementCapture:";
+const EXPORT_SESSION_TTL_MS = 6 * 60 * 60 * 1000;
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.action.setBadgeBackgroundColor({ color: "#1f2937" });
+  cleanupStaleExportSessions().catch(() => {});
+});
+
+chrome.runtime.onStartup.addListener(() => {
+  cleanupStaleExportSessions().catch(() => {});
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -99,7 +106,7 @@ function startExportWithLock(sourceTabId, mode, options) {
 }
 
 async function startExport(sourceTabId, mode, options) {
-  const extracted = await sendTabMessage(sourceTabId, { type: MESSAGE.EXTRACT });
+  const extracted = await requestExtraction(sourceTabId);
   if (!extracted?.ok) {
     throw new Error(extracted?.error || "Could not extract Codeforces statements");
   }
@@ -292,7 +299,7 @@ function createSessionId() {
 }
 
 function getStorageKey(sessionId) {
-  return `cfStatementCapture:${sessionId}`;
+  return `${EXPORT_STORAGE_PREFIX}${sessionId}`;
 }
 
 function safeFileName(fileName) {
@@ -305,6 +312,37 @@ function safeFileName(fileName) {
 
 function sendTabMessage(tabId, message) {
   return chromeCall(chrome.tabs, "sendMessage", tabId, message);
+}
+
+async function requestExtraction(tabId) {
+  try {
+    return await sendTabMessage(tabId, { type: MESSAGE.EXTRACT });
+  } catch (error) {
+    const message = getErrorMessage(error);
+    if (message.includes("Receiving end does not exist") || message.includes("Could not establish connection")) {
+      throw new Error("Open a complete Codeforces contest, Gym, or group contest problemset page before exporting.");
+    }
+    throw error;
+  }
+}
+
+async function cleanupStaleExportSessions() {
+  const stored = await chromeCall(chrome.storage.local, "get", null);
+  const expiredKeys = [];
+  const now = Date.now();
+
+  for (const [key, value] of Object.entries(stored || {})) {
+    if (!key.startsWith(EXPORT_STORAGE_PREFIX)) continue;
+
+    const capturedAt = Date.parse(value?.capturedAt || "");
+    if (!Number.isFinite(capturedAt) || now - capturedAt > EXPORT_SESSION_TTL_MS) {
+      expiredKeys.push(key);
+    }
+  }
+
+  if (expiredKeys.length > 0) {
+    await chromeCall(chrome.storage.local, "remove", expiredKeys);
+  }
 }
 
 function chromeCall(target, method, ...args) {

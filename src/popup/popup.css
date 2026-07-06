@@ -2,7 +2,7 @@
   color-scheme: light;
   font-family: Arial, Helvetica, sans-serif;
   color: #111827;
-  background: #f9fafb;
+  background: #f8fafc;
 }
 
 * {
@@ -10,19 +10,20 @@
 }
 
 body {
-  width: 320px;
+  width: 340px;
   margin: 0;
 }
 
 main {
   display: grid;
-  gap: 14px;
+  gap: 13px;
   padding: 16px;
 }
 
 h1 {
   margin: 0;
-  font-size: 18px;
+  font-size: 19px;
+  line-height: 1.15;
 }
 
 p {
@@ -30,6 +31,15 @@ p {
   color: #4b5563;
   font-size: 13px;
   line-height: 1.35;
+}
+
+.eyebrow {
+  margin-bottom: 4px;
+  color: #0f766e;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
 }
 
 dl {
@@ -40,7 +50,7 @@ dl {
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   background: #fff;
-  padding: 10px;
+  padding: 11px;
   font-size: 12px;
 }
 
@@ -79,7 +89,7 @@ button {
   border: 0;
   border-radius: 7px;
   padding: 10px 12px;
-  background: #1f2937;
+  background: #0f766e;
   color: #fff;
   cursor: pointer;
   font-weight: 700;
@@ -91,6 +101,14 @@ button.secondary,
   color: #111827;
 }
 
+button:hover:not(:disabled) {
+  background: #115e59;
+}
+
+#print:hover:not(:disabled) {
+  background: #d1d5db;
+}
+
 button:disabled {
   cursor: not-allowed;
   opacity: 0.55;
@@ -98,4 +116,26 @@ button:disabled {
 
 #message {
   min-height: 18px;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 11px;
+  color: #6b7280;
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+footer a {
+  color: #0f766e;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+footer a:hover {
+  text-decoration: underline;
 }

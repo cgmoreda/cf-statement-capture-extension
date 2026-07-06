@@ -25,7 +25,7 @@ async function init() {
       return;
     }
 
-    const response = await chromeCall(chrome.tabs, "sendMessage", tab.id, { type: MESSAGE.GET_STATUS });
+    const response = await requestPageStatus(tab.id);
     if (!response?.ok) {
       renderUnsupported(response?.error || "Could not inspect this tab");
       return;
@@ -70,9 +70,10 @@ function renderStatus(status) {
     : "Waiting for statements";
   detailsEl.hidden = false;
   detailsEl.innerHTML = `
-    <dt>Route</dt><dd>${escapeHtml(status.route || "")}</dd>
     <dt>Type</dt><dd>${escapeHtml(status.kind || "")}</dd>
+    <dt>Statements</dt><dd>${status.statementCount || 0}</dd>
     <dt>Title</dt><dd>${escapeHtml(status.title || "")}</dd>
+    <dt>Page</dt><dd>${escapeHtml(status.route || "")}</dd>
   `;
   exportButton.disabled = !status.ready;
   printButton.disabled = !status.ready;
@@ -91,6 +92,24 @@ function setBusy(isBusy, text = "") {
   exportButton.disabled = isBusy || !currentStatus?.ready;
   printButton.disabled = isBusy || !currentStatus?.ready;
   if (text) messageEl.textContent = text;
+}
+
+async function requestPageStatus(tabId) {
+  try {
+    return await chromeCall(chrome.tabs, "sendMessage", tabId, { type: MESSAGE.GET_STATUS });
+  } catch (error) {
+    const message = error?.message || String(error);
+    if (message.includes("Receiving end does not exist") || message.includes("Could not establish connection")) {
+      return {
+        ok: true,
+        status: {
+          supported: false,
+          reason: "Open a complete Codeforces contest, Gym, or group contest problemset page"
+        }
+      };
+    }
+    throw error;
+  }
 }
 
 function chromeCall(target, method, ...args) {

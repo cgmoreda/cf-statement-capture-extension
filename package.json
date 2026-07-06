@@ -1,9 +1,12 @@
 {
   "name": "cf-statement-capture-extension",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "private": true,
-  "description": "Chrome extension for exporting Codeforces contest, gym, and group contest statements as PDF.",
+  "description": "Chrome extension for exporting Codeforces contest, Gym, and group contest statements as PDF by ICPC Assiut.",
   "scripts": {
+    "build:icons": "node scripts/generate-icons.mjs",
+    "check": "npm test && node --check src/content/content.js && node --check src/background/service-worker.js && node --check src/print/print.js && node --check src/popup/popup.js && node --check scripts/smoke-check.mjs && node --check scripts/generate-icons.mjs && node --check scripts/package-extension.mjs",
+    "package": "node scripts/package-extension.mjs",
     "test": "node scripts/smoke-check.mjs"
   }
 }

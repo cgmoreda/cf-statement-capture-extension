@@ -317,24 +317,42 @@
         }
         .panel {
           display: grid;
-          gap: 6px;
-          min-width: 170px;
-          padding: 10px;
+          gap: 8px;
+          min-width: 190px;
+          padding: 11px;
           border: 1px solid rgba(30, 41, 59, 0.18);
           border-radius: 8px;
           background: rgba(255, 255, 255, 0.96);
           box-shadow: 0 10px 26px rgba(15, 23, 42, 0.18);
           color: #111827;
         }
+        .brand {
+          display: flex;
+          justify-content: space-between;
+          gap: 10px;
+          font-size: 11px;
+          line-height: 1.2;
+          color: #4b5563;
+        }
+        .brand strong {
+          color: #111827;
+          font-size: 12px;
+        }
+        .brand span {
+          white-space: nowrap;
+        }
         button {
           border: 0;
           border-radius: 6px;
           padding: 8px 10px;
-          background: #1f2937;
+          background: #0f766e;
           color: #fff;
           font-size: 13px;
           font-weight: 700;
           cursor: pointer;
+        }
+        button:hover:not(:disabled) {
+          background: #115e59;
         }
         button:disabled {
           cursor: progress;
@@ -361,6 +379,10 @@
         }
       </style>
       <div class="panel">
+        <div class="brand">
+          <strong>Codeforces PDF</strong>
+          <span>icpcassiut.org</span>
+        </div>
         <button type="button">Export PDF</button>
         <label><input type="checkbox" data-include-cover> Cover page</label>
         <div data-status>${status.statementCount || 0} statements detected</div>

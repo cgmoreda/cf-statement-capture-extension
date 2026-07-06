@@ -1,11 +1,25 @@
 {
   "manifest_version": 3,
-  "name": "Codeforces Statement Capture",
-  "version": "0.1.9",
-  "description": "Export Codeforces contest, gym, and group contest problem statements to a clean PDF.",
+  "name": "Codeforces PDF Exporter",
+  "short_name": "CF PDF Exporter",
+  "version": "0.2.0",
+  "description": "Export Codeforces contest, Gym, and group contest statements to clean PDFs by ICPC Assiut.",
+  "homepage_url": "https://icpcassiut.org",
+  "icons": {
+    "16": "assets/icons/icon-16.png",
+    "32": "assets/icons/icon-32.png",
+    "48": "assets/icons/icon-48.png",
+    "128": "assets/icons/icon-128.png"
+  },
   "action": {
-    "default_title": "Export Codeforces statements",
-    "default_popup": "src/popup/popup.html"
+    "default_title": "Export Codeforces PDF",
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon-16.png",
+      "32": "assets/icons/icon-32.png",
+      "48": "assets/icons/icon-48.png",
+      "128": "assets/icons/icon-128.png"
+    }
   },
   "background": {
     "service_worker": "src/background/service-worker.js"
@@ -17,7 +31,7 @@
       "run_at": "document_idle"
     }
   ],
-  "permissions": ["activeTab", "debugger", "downloads", "scripting", "storage"],
+  "permissions": ["activeTab", "debugger", "downloads", "storage"],
   "host_permissions": [
     "https://codeforces.com/*",
     "https://espresso.codeforces.com/*"

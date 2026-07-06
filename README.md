@@ -1,6 +1,8 @@
-# Codeforces Statement Capture
+# Codeforces PDF Exporter
 
-Chrome extension for exporting Codeforces contest, Gym, and group contest problem statements to a clean PDF.
+Chrome extension for exporting Codeforces contest, Gym, and group contest problem statements to clean PDFs.
+
+Built by ICPC Assiut for competitive programming teams that need printable problem sets without server-side scraping or login workarounds.
 
 ## Supported Pages
 
@@ -9,6 +11,22 @@ Chrome extension for exporting Codeforces contest, Gym, and group contest proble
 - `https://codeforces.com/group/:groupId/contest/:contestId/problems`
 
 The extension uses the current browser session, so it works with pages that require normal Codeforces login or Cloudflare browser checks.
+
+## Privacy
+
+The extension runs locally in the browser. It does not send statement content, cookies, handles, or page data to `icpcassiut.org` or any other server.
+
+During export, the extension temporarily stores the extracted statement HTML in `chrome.storage.local` so the extension print page can render it. That temporary data is removed after a successful export and stale sessions are purged on browser startup or extension install.
+
+See [PRIVACY.md](PRIVACY.md) for the full policy.
+
+## Permissions
+
+- `activeTab`: inspect the active Codeforces tab from the popup.
+- `debugger`: call Chrome DevTools `Page.printToPDF` from the extension, which is how the PDF is generated client-side.
+- `downloads`: save the generated PDF.
+- `storage`: pass temporary export data from the source page to the print renderer.
+- Host access for `codeforces.com` and `espresso.codeforces.com`: read Codeforces statements and render Codeforces-hosted images.
 
 ## Local Install
 
@@ -23,7 +41,22 @@ The cover page option is disabled by default. The generated PDF includes a page 
 ## Development
 
 ```sh
+npm run build:icons
+npm run check
 npm test
 ```
 
 The smoke check validates the manifest, supported route detection, PDF generation hooks, and print CSS requirements.
+
+## Package
+
+```sh
+npm run build:icons
+npm run package
+```
+
+The package command writes a clean extension ZIP under `dist/` using an explicit allowlist. It excludes `.git/`, `.lavish/`, local downloads, and generated review artifacts.
+
+## Release Status
+
+This repository is pre-release. The extension is not yet submitted to the Chrome Web Store.

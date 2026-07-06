@@ -9,7 +9,8 @@
   <body>
     <main>
       <header>
-        <h1>Codeforces PDF</h1>
+        <p class="eyebrow">ICPC Assiut</p>
+        <h1>Codeforces PDF Exporter</h1>
         <p id="status">Checking page...</p>
       </header>
       <dl id="details" hidden></dl>
@@ -19,9 +20,13 @@
       </label>
       <div class="actions">
         <button id="export" type="button" disabled>Download PDF</button>
-        <button id="print" type="button" disabled>Open print page</button>
+        <button id="print" type="button" disabled>Open print preview</button>
       </div>
       <p id="message" role="status"></p>
+      <footer>
+        <span>Runs locally. No data is sent.</span>
+        <a href="https://icpcassiut.org" target="_blank" rel="noreferrer">icpcassiut.org</a>
+      </footer>
     </main>
     <script src="popup.js"></script>
   </body>

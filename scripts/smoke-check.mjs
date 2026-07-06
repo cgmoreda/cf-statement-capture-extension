@@ -3,7 +3,14 @@ import path from "node:path";
 
 const root = process.cwd();
 const requiredFiles = [
+  "README.md",
+  "PRIVACY.md",
+  "SECURITY.md",
   "manifest.json",
+  "assets/icons/icon-16.png",
+  "assets/icons/icon-32.png",
+  "assets/icons/icon-48.png",
+  "assets/icons/icon-128.png",
   "src/background/service-worker.js",
   "src/content/content.js",
   "src/print/print.html",
@@ -20,10 +27,15 @@ for (const file of requiredFiles) {
 
 const manifest = JSON.parse(fs.readFileSync(path.join(root, "manifest.json"), "utf8"));
 assert(manifest.manifest_version === 3, "Manifest must use MV3");
+assert(manifest.name === "Codeforces PDF Exporter", "Unexpected extension name");
+assert(manifest.homepage_url === "https://icpcassiut.org", "Missing ICPC Assiut homepage URL");
 assert(manifest.permissions.includes("debugger"), "Manifest must request debugger permission");
 assert(manifest.permissions.includes("downloads"), "Manifest must request downloads permission");
+assert(manifest.permissions.includes("storage"), "Manifest must request storage permission");
+assert(!manifest.permissions.includes("scripting"), "Manifest must not request unused scripting permission");
 assert(manifest.host_permissions.includes("https://codeforces.com/*"), "Missing Codeforces host permission");
 assert(manifest.content_scripts[0].matches.includes("https://codeforces.com/*"), "Missing Codeforces content script match");
+assert(manifest.icons?.["128"] === "assets/icons/icon-128.png", "Missing 128px icon");
 
 const content = fs.readFileSync(path.join(root, "src/content/content.js"), "utf8");
 for (const pattern of [
@@ -41,7 +53,9 @@ for (const token of [
   "Page.printToPDF",
   "chrome.debugger, \"attach\"",
   "chrome.downloads, \"download\"",
-  "CF_CAPTURE_PRINT_READY"
+  "CF_CAPTURE_PRINT_READY",
+  "cleanupStaleExportSessions",
+  "EXPORT_SESSION_TTL_MS"
 ]) {
   assert(background.includes(token), `Background missing ${token}`);
 }
@@ -49,6 +63,11 @@ for (const token of [
 const printCss = fs.readFileSync(path.join(root, "src/print/print.css"), "utf8");
 for (const token of ["@page", "break-before: page", "break-inside: avoid"]) {
   assert(printCss.includes(token), `Print CSS missing ${token}`);
+}
+
+const privacy = fs.readFileSync(path.join(root, "PRIVACY.md"), "utf8");
+for (const token of ["does not collect", "chrome.storage.local", "does not make analytics"]) {
+  assert(privacy.includes(token), `Privacy policy missing ${token}`);
 }
 
 console.log("Smoke check passed");
