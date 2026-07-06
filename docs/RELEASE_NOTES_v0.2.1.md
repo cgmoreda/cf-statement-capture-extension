@@ -1,6 +1,6 @@
 # CF Gyms Statement Exporter v0.2.1
 
-Production-prep release for private testing.
+Production-prep release for public launch preparation.
 
 ## Highlights
 
