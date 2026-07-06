@@ -12,8 +12,12 @@ const zipPath = path.join(distDir, zipName);
 const includes = [
   "manifest.json",
   "README.md",
+  "LICENSE",
+  "NOTICE",
+  "ADDITIONAL_TERMS.md",
   "PRIVACY.md",
   "SECURITY.md",
+  "TRADEMARKS.md",
   "assets",
   "src"
 ];
