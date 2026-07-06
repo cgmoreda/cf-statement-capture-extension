@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Codeforces Export</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Codeforces PDF</h1>
+        <p id="status">Checking page...</p>
+      </header>
+      <dl id="details" hidden></dl>
+      <label class="option">
+        <input id="include-cover" type="checkbox">
+        Include cover page
+      </label>
+      <div class="actions">
+        <button id="export" type="button" disabled>Download PDF</button>
+        <button id="print" type="button" disabled>Open print page</button>
+      </div>
+      <p id="message" role="status"></p>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

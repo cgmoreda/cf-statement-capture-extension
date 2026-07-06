@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Codeforces Statement Capture",
+  "version": "0.1.9",
+  "description": "Export Codeforces contest, gym, and group contest problem statements to a clean PDF.",
+  "action": {
+    "default_title": "Export Codeforces statements",
+    "default_popup": "src/popup/popup.html"
+  },
+  "background": {
+    "service_worker": "src/background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://codeforces.com/*"],
+      "js": ["src/content/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["activeTab", "debugger", "downloads", "scripting", "storage"],
+  "host_permissions": [
+    "https://codeforces.com/*",
+    "https://espresso.codeforces.com/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; img-src 'self' data: https://codeforces.com https://espresso.codeforces.com; style-src 'self' 'unsafe-inline'"
+  }
+}
