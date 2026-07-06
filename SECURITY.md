@@ -6,7 +6,7 @@ This project is pre-release. Security fixes are made on `main` until the first s
 
 ## Reporting a Vulnerability
 
-Please report security issues privately through the repository owner or through ICPC Assiut at `https://icpcassiut.org`.
+Please report security issues privately through the repository owner or by emailing `support@icpcassiut.org`.
 
 Do not open a public issue for vulnerabilities involving:
 

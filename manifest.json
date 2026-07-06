@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Codeforces PDF Exporter",
-  "short_name": "CF PDF Exporter",
-  "version": "0.2.0",
+  "name": "CF Gyms Statement Exporter",
+  "short_name": "CF Gyms Export",
+  "version": "0.2.1",
   "description": "Export Codeforces contest, Gym, and group contest statements to clean PDFs by ICPC Assiut.",
   "homepage_url": "https://icpcassiut.org",
   "icons": {
@@ -12,7 +12,7 @@
     "128": "assets/icons/icon-128.png"
   },
   "action": {
-    "default_title": "Export Codeforces PDF",
+    "default_title": "Export CF statements",
     "default_popup": "src/popup/popup.html",
     "default_icon": {
       "16": "assets/icons/icon-16.png",

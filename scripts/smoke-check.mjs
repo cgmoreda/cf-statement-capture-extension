@@ -12,7 +12,7 @@ const requiredFiles = [
   "SECURITY.md",
   "TRADEMARKS.md",
   "docs/CHROME_WEB_STORE.md",
-  "docs/RELEASE_NOTES_v0.2.0.md",
+  "docs/RELEASE_NOTES_v0.2.1.md",
   "manifest.json",
   "assets/icons/icon-16.png",
   "assets/icons/icon-32.png",
@@ -36,7 +36,7 @@ const manifest = JSON.parse(fs.readFileSync(path.join(root, "manifest.json"), "u
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
 assert(packageJson.license === "AGPL-3.0-only", "package.json must declare AGPL-3.0-only");
 assert(manifest.manifest_version === 3, "Manifest must use MV3");
-assert(manifest.name === "Codeforces PDF Exporter", "Unexpected extension name");
+assert(manifest.name === "CF Gyms Statement Exporter", "Unexpected extension name");
 assert(manifest.homepage_url === "https://icpcassiut.org", "Missing ICPC Assiut homepage URL");
 assert(manifest.permissions.includes("debugger"), "Manifest must request debugger permission");
 assert(manifest.permissions.includes("downloads"), "Manifest must request downloads permission");
@@ -90,7 +90,7 @@ for (const token of ["ICPC Assiut", "icpcassiut.org", "No Trademark License"]) {
 }
 
 const workflow = fs.readFileSync(path.join(root, ".github/workflows/validate.yml"), "utf8");
-for (const token of ["npm run build:icons", "npm run check", "npm run package", "actions/upload-artifact"]) {
+for (const token of ["npm run build:icons", "npm run check", "npm run package", "cf-gyms-statement-exporter", "actions/upload-artifact"]) {
   assert(workflow.includes(token), `Validate workflow missing ${token}`);
 }
 

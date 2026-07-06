@@ -36,6 +36,6 @@ jobs:
       - name: Upload extension ZIP
         uses: actions/upload-artifact@v4
         with:
-          name: cf-pdf-exporter
-          path: dist/cf-pdf-exporter-v*.zip
+          name: cf-gyms-statement-exporter
+          path: dist/cf-gyms-statement-exporter-v*.zip
           if-no-files-found: error

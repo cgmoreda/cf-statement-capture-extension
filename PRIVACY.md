@@ -1,6 +1,6 @@
 # Privacy Policy
 
-Codeforces PDF Exporter is a local browser extension.
+CF Gyms Statement Exporter is a local browser extension.
 
 ## Data Collection
 
@@ -28,4 +28,4 @@ The extension does not make analytics, tracking, telemetry, or marketing request
 
 ## Contact
 
-For privacy questions, contact ICPC Assiut through `https://icpcassiut.org`.
+For privacy questions, contact ICPC Assiut at `support@icpcassiut.org` or through `https://icpcassiut.org`.

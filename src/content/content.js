@@ -380,7 +380,7 @@
       </style>
       <div class="panel">
         <div class="brand">
-          <strong>Codeforces PDF</strong>
+          <strong>CF Statements</strong>
           <span>icpcassiut.org</span>
         </div>
         <button type="button">Export PDF</button>

@@ -7,7 +7,7 @@ const manifest = JSON.parse(fs.readFileSync(path.join(root, "manifest.json"), "u
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, "package.json"), "utf8"));
 const version = manifest.version;
 const distDir = path.join(root, "dist");
-const zipName = `cf-pdf-exporter-v${version}.zip`;
+const zipName = `cf-gyms-statement-exporter-v${version}.zip`;
 const zipPath = path.join(distDir, zipName);
 const includes = [
   "manifest.json",

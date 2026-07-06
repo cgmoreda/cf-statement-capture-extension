@@ -1,12 +1,12 @@
 # Chrome Web Store Preparation
 
-This document tracks the store listing and submission details for Codeforces PDF Exporter.
+This document tracks the store listing and submission details for CF Gyms Statement Exporter.
 
 ## Listing Draft
 
 ### Name
 
-Codeforces PDF Exporter
+CF Gyms Statement Exporter
 
 ### Short Description
 
@@ -14,7 +14,7 @@ Export Codeforces contest, Gym, and group contest statements to clean printable 
 
 ### Detailed Description
 
-Codeforces PDF Exporter helps competitive programming teams create printable problem sets directly from the browser.
+CF Gyms Statement Exporter helps competitive programming teams create printable problem sets directly from the browser.
 
 Open a supported Codeforces problemset page, click Export PDF, and the extension generates a clean A4 PDF using your current browser session. This avoids server-side scraping, login duplication, and Cloudflare issues.
 
@@ -40,6 +40,18 @@ Productivity
 ### Language
 
 English
+
+### Publisher
+
+Personal Chrome Web Store publisher account.
+
+### Launch Visibility
+
+Public.
+
+### Support Contact
+
+`support@icpcassiut.org`
 
 ## Permission Justification
 
@@ -85,7 +97,7 @@ Prepare screenshots for:
 
 ## Submission Checklist
 
-- [ ] Confirm public repo visibility and license files are final.
+- [ ] Confirm GitHub repository is public.
 - [ ] Build release ZIP with `npm run package`.
 - [ ] Verify ZIP contains legal and privacy files.
 - [ ] Load ZIP contents as unpacked extension in Chrome.

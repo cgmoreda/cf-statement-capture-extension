@@ -1,6 +1,6 @@
 # Additional Terms
 
-Codeforces PDF Exporter is licensed under the GNU Affero General Public License version 3 only (`AGPL-3.0-only`), with the following additional terms under AGPLv3 Section 7.
+CF Gyms Statement Exporter is licensed under the GNU Affero General Public License version 3 only (`AGPL-3.0-only`), with the following additional terms under AGPLv3 Section 7.
 
 These terms are intended to preserve reasonable legal notices, author attributions, and origin markings while keeping the software modifiable and redistributable under AGPLv3.
 

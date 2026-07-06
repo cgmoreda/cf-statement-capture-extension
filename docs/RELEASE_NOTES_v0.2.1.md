@@ -1,6 +1,6 @@
-# Codeforces PDF Exporter v0.2.0
+# CF Gyms Statement Exporter v0.2.1
 
-Initial production-prep release for private testing.
+Production-prep release for private testing.
 
 ## Highlights
 
@@ -21,7 +21,7 @@ Initial production-prep release for private testing.
 Release ZIP:
 
 ```text
-cf-pdf-exporter-v0.2.0.zip
+cf-gyms-statement-exporter-v0.2.1.zip
 ```
 
 The ZIP is built from an explicit allowlist and includes source, icons, privacy policy, security policy, AGPL license text, attribution terms, trademark policy, and notice file.

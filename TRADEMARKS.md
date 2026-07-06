@@ -1,6 +1,6 @@
 # Trademark Policy
 
-This policy covers project names, domain names, logos, icons, and other marks associated with ICPC Assiut and Codeforces PDF Exporter.
+This policy covers project names, domain names, logos, icons, and other marks associated with ICPC Assiut and CF Gyms Statement Exporter.
 
 ## Protected Marks
 
@@ -8,7 +8,7 @@ The protected marks include:
 
 - `ICPC Assiut`
 - `icpcassiut.org`
-- Codeforces PDF Exporter icons and visual branding created for this project
+- CF Gyms Statement Exporter icons and visual branding created for this project
 - Any confusingly similar names, logos, or branding
 
 ## Permitted Uses
