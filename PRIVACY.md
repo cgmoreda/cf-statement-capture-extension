@@ -20,6 +20,14 @@ Temporary export data is removed after a successful PDF export.
 
 If the browser or extension is interrupted before cleanup finishes, stale export data is purged automatically on extension install and browser startup.
 
+## Chrome Web Store Limited Use Disclosure
+
+The extension uses Codeforces page content only to provide its single user-facing purpose: exporting the complete problemset page that the user opened into a printable PDF.
+
+The extension does not sell, transfer, share, or use page content for advertising, analytics, profiling, creditworthiness, or any unrelated purpose.
+
+No human at ICPC Assiut reads the page content or generated PDFs. All processing happens locally in the user's browser.
+
 ## Network Access
 
 The extension may render images that are already referenced by the Codeforces statement page, including images hosted on `codeforces.com` or `espresso.codeforces.com`.
