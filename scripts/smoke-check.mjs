@@ -51,7 +51,12 @@ for (const pattern of [
   "/^\\/contest\\/(\\d+)\\/problems$/",
   "/^\\/gym\\/(\\d+)\\/problems$/",
   "/^\\/group\\/([^/]+)\\/contest\\/(\\d+)\\/problems$/",
+  "/^\\/contest\\/(\\d+)\\/problem\\/([^/]+)$/",
+  "/^\\/gym\\/(\\d+)\\/problem\\/([^/]+)$/",
+  "/^\\/group\\/([^/]+)\\/contest\\/(\\d+)\\/problem\\/([^/]+)$/",
+  "/^\\/problemset\\/problem\\/(\\d+)\\/([^/]+)$/",
   "document.querySelectorAll(\".problem-statement\")",
+  "showPageButton",
   "CF_CAPTURE_START_EXPORT_FROM_PAGE"
 ]) {
   assert(content.includes(pattern), `Content script missing ${pattern}`);
@@ -59,10 +64,13 @@ for (const pattern of [
 
 const popup = fs.readFileSync(path.join(root, "src/popup/popup.js"), "utf8");
 for (const token of [
-  "Reload this Codeforces problemset page",
+  "Reload this Codeforces page",
   "/^\\/contest\\/\\d+\\/problems$/",
   "/^\\/gym\\/\\d+\\/problems$/",
-  "/^\\/group\\/[^/]+\\/contest\\/\\d+\\/problems$/"
+  "/^\\/group\\/[^/]+\\/contest\\/\\d+\\/problems$/",
+  "/^\\/contest\\/\\d+\\/problem\\/[^/]+$/",
+  "/^\\/problemset\\/problem\\/\\d+\\/[^/]+$/",
+  "showPageButton"
 ]) {
   assert(popup.includes(token), `Popup missing ${token}`);
 }

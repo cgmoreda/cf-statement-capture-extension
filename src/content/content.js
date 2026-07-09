@@ -1,6 +1,11 @@
 (() => {
   const ROOT_ID = "cf-statement-capture-root";
+  const SETTINGS_KEY = "cfStatementCaptureSettings";
+  const DEFAULT_SETTINGS = {
+    showPageButton: true
+  };
   let exportInFlight = false;
+  let settings = { ...DEFAULT_SETTINGS };
   const MESSAGE = {
     GET_STATUS: "CF_CAPTURE_GET_STATUS",
     EXTRACT: "CF_CAPTURE_EXTRACT",
@@ -8,7 +13,7 @@
     PAGE_STATUS: "CF_CAPTURE_PAGE_STATUS"
   };
 
-  function parseCodeforcesProblemsetUrl(rawUrl = location.href) {
+  function parseCodeforcesUrl(rawUrl = location.href) {
     let url;
     try {
       url = new URL(rawUrl);
@@ -27,6 +32,7 @@
         supported: true,
         kind: "contest",
         contestId: match[1],
+        pageType: "problemset",
         route: `/contest/${match[1]}/problems`
       };
     }
@@ -37,6 +43,7 @@
         supported: true,
         kind: "gym",
         contestId: match[1],
+        pageType: "problemset",
         route: `/gym/${match[1]}/problems`
       };
     }
@@ -48,11 +55,61 @@
         kind: "group-contest",
         groupId: match[1],
         contestId: match[2],
+        pageType: "problemset",
         route: `/group/${match[1]}/contest/${match[2]}/problems`
       };
     }
 
-    return { supported: false, reason: "Open a complete contest, gym, or group contest problemset page" };
+    match = path.match(/^\/contest\/(\d+)\/problem\/([^/]+)$/);
+    if (match) {
+      return {
+        supported: true,
+        kind: "contest-problem",
+        contestId: match[1],
+        problemIndex: decodeURIComponent(match[2]),
+        pageType: "single-problem",
+        route: `/contest/${match[1]}/problem/${match[2]}`
+      };
+    }
+
+    match = path.match(/^\/gym\/(\d+)\/problem\/([^/]+)$/);
+    if (match) {
+      return {
+        supported: true,
+        kind: "gym-problem",
+        contestId: match[1],
+        problemIndex: decodeURIComponent(match[2]),
+        pageType: "single-problem",
+        route: `/gym/${match[1]}/problem/${match[2]}`
+      };
+    }
+
+    match = path.match(/^\/group\/([^/]+)\/contest\/(\d+)\/problem\/([^/]+)$/);
+    if (match) {
+      return {
+        supported: true,
+        kind: "group-contest-problem",
+        groupId: match[1],
+        contestId: match[2],
+        problemIndex: decodeURIComponent(match[3]),
+        pageType: "single-problem",
+        route: `/group/${match[1]}/contest/${match[2]}/problem/${match[3]}`
+      };
+    }
+
+    match = path.match(/^\/problemset\/problem\/(\d+)\/([^/]+)$/);
+    if (match) {
+      return {
+        supported: true,
+        kind: "problemset-problem",
+        contestId: match[1],
+        problemIndex: decodeURIComponent(match[2]),
+        pageType: "single-problem",
+        route: `/problemset/problem/${match[1]}/${match[2]}`
+      };
+    }
+
+    return { supported: false, reason: "Open a Codeforces problemset page or individual problem page" };
   }
 
   function getStatements() {
@@ -60,6 +117,12 @@
   }
 
   function getContestTitle() {
+    const route = parseCodeforcesUrl();
+    if (route.pageType === "single-problem") {
+      const problemTitle = getStatements()[0]?.querySelector(".header .title, .title")?.textContent?.trim();
+      if (problemTitle) return normalizeText(problemTitle);
+    }
+
     const candidates = [
       ".contest-name",
       ".caption",
@@ -80,7 +143,7 @@
   }
 
   function getStatus() {
-    const route = parseCodeforcesProblemsetUrl();
+    const route = parseCodeforcesUrl();
     const statements = getStatements();
     return {
       ...route,
@@ -88,6 +151,7 @@
       title: getContestTitle(),
       documentTitle: document.title,
       statementCount: statements.length,
+      settings,
       ready: route.supported && statements.length > 0
     };
   }
@@ -99,6 +163,8 @@
   function safeFilePart(text) {
     return normalizeText(text)
       .replace(/[\\/:*?"<>|]+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "")
       .replace(/\s+/g, " ")
       .slice(0, 120)
       .trim() || "codeforces-problems";
@@ -270,9 +336,7 @@
       };
     });
 
-    const routeLabel = status.kind === "group-contest"
-      ? `group-${status.groupId}-contest-${status.contestId}`
-      : `${status.kind}-${status.contestId}`;
+    const routeLabel = getRouteLabel(status);
 
     return {
       capturedAt: new Date().toISOString(),
@@ -285,18 +349,36 @@
     };
   }
 
+  function getRouteLabel(status) {
+    if (status.kind === "group-contest") {
+      return `group-${status.groupId}-contest-${status.contestId}`;
+    }
+
+    if (status.kind === "group-contest-problem") {
+      return `group-${status.groupId}-contest-${status.contestId}-problem-${status.problemIndex}`;
+    }
+
+    if (status.pageType === "single-problem") {
+      return `${status.kind.replace(/-problem$/, "")}-${status.contestId}-problem-${status.problemIndex}`;
+    }
+
+    return `${status.kind}-${status.contestId}`;
+  }
+
   function setOverlayState(root, state, detail = "") {
-    const button = root.shadowRoot.querySelector("button");
+    const buttons = root.shadowRoot.querySelectorAll("button");
     const status = root.shadowRoot.querySelector("[data-status]");
     root.dataset.state = state;
-    button.disabled = state === "running";
+    buttons.forEach((button) => {
+      button.disabled = state === "running";
+    });
     status.textContent = detail;
   }
 
   function ensureOverlay() {
     const status = getStatus();
     const existing = document.getElementById(ROOT_ID);
-    if (!status.supported) {
+    if (!status.supported || !settings.showPageButton) {
       existing?.remove();
       return;
     }
@@ -358,6 +440,18 @@
           cursor: progress;
           opacity: 0.72;
         }
+        button.secondary {
+          background: #e5e7eb;
+          color: #111827;
+        }
+        button.secondary:hover:not(:disabled) {
+          background: #d1d5db;
+        }
+        .actions {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr);
+          gap: 6px;
+        }
         [data-status] {
           min-height: 14px;
           max-width: 230px;
@@ -383,35 +477,83 @@
           <strong>CF Statements</strong>
           <span>icpcassiut.org</span>
         </div>
-        <button type="button">Export PDF</button>
+        <div class="actions">
+          <button type="button" data-export-pdf>Export PDF</button>
+          <button type="button" class="secondary" data-print>Print</button>
+        </div>
         <label><input type="checkbox" data-include-cover> Cover page</label>
-        <div data-status>${status.statementCount || 0} statements detected</div>
+        <div data-status>${formatStatementCount(status.statementCount || 0)} detected</div>
       </div>
     `;
 
-    shadow.querySelector("button").addEventListener("click", async () => {
-      if (exportInFlight) return;
+    shadow.querySelector("[data-export-pdf]").addEventListener("click", () => {
+      startOverlayExport(root, shadow, "pdf");
+    });
 
-      try {
-        exportInFlight = true;
-        setOverlayState(root, "running", "Preparing PDF...");
-        const response = await chrome.runtime.sendMessage({
-          type: MESSAGE.START_EXPORT_FROM_PAGE,
-          mode: "pdf",
-          includeCover: shadow.querySelector("[data-include-cover]")?.checked === true
-        });
-        if (!response?.ok) {
-          throw new Error(response?.error || "Export failed");
-        }
-        setOverlayState(root, "done", `Saved ${response.fileName || "PDF"}`);
-      } catch (error) {
-        setOverlayState(root, "error", error?.message || "Export failed");
-      } finally {
-        exportInFlight = false;
-      }
+    shadow.querySelector("[data-print]").addEventListener("click", () => {
+      startOverlayExport(root, shadow, "print");
     });
 
     document.documentElement.append(root);
+  }
+
+  async function startOverlayExport(root, shadow, mode) {
+    if (exportInFlight) return;
+
+    try {
+      exportInFlight = true;
+      setOverlayState(root, "running", mode === "pdf" ? "Preparing PDF..." : "Opening print page...");
+      const response = await chrome.runtime.sendMessage({
+        type: MESSAGE.START_EXPORT_FROM_PAGE,
+        mode,
+        includeCover: shadow.querySelector("[data-include-cover]")?.checked === true
+      });
+      if (!response?.ok) {
+        throw new Error(response?.error || "Export failed");
+      }
+      setOverlayState(root, "done", mode === "pdf" ? `Saved ${response.fileName || "PDF"}` : "Print page opened");
+    } catch (error) {
+      setOverlayState(root, "error", error?.message || "Export failed");
+    } finally {
+      exportInFlight = false;
+    }
+  }
+
+  function formatStatementCount(count) {
+    return count === 1 ? "1 statement" : `${count} statements`;
+  }
+
+  function normalizeSettings(value) {
+    return {
+      ...DEFAULT_SETTINGS,
+      ...(value && typeof value === "object" ? value : {})
+    };
+  }
+
+  async function loadSettings() {
+    try {
+      const stored = await chromeCall(chrome.storage.local, "get", SETTINGS_KEY);
+      settings = normalizeSettings(stored?.[SETTINGS_KEY]);
+    } catch {
+      settings = { ...DEFAULT_SETTINGS };
+    }
+  }
+
+  function chromeCall(target, method, ...args) {
+    return new Promise((resolve, reject) => {
+      try {
+        target[method].call(target, ...args, (result) => {
+          const error = chrome.runtime.lastError;
+          if (error) {
+            reject(new Error(`${method}: ${error.message}`));
+            return;
+          }
+          resolve(result);
+        });
+      } catch (error) {
+        reject(new Error(`${method}: ${error?.message || String(error)}`));
+      }
+    });
   }
 
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
@@ -430,6 +572,15 @@
     return false;
   });
 
-  ensureOverlay();
-  chrome.runtime.sendMessage({ type: MESSAGE.PAGE_STATUS, status: getStatus() }).catch(() => {});
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName !== "local" || !changes[SETTINGS_KEY]) return;
+    settings = normalizeSettings(changes[SETTINGS_KEY].newValue);
+    ensureOverlay();
+    chrome.runtime.sendMessage({ type: MESSAGE.PAGE_STATUS, status: getStatus() }).catch(() => {});
+  });
+
+  loadSettings().finally(() => {
+    ensureOverlay();
+    chrome.runtime.sendMessage({ type: MESSAGE.PAGE_STATUS, status: getStatus() }).catch(() => {});
+  });
 })();

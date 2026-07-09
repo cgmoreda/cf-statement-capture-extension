@@ -3,22 +3,35 @@ const MESSAGE = {
   START_EXPORT: "CF_CAPTURE_START_EXPORT"
 };
 
+const SETTINGS_KEY = "cfStatementCaptureSettings";
+const DEFAULT_SETTINGS = {
+  showPageButton: true
+};
+
 const statusEl = document.getElementById("status");
 const detailsEl = document.getElementById("details");
 const messageEl = document.getElementById("message");
 const exportButton = document.getElementById("export");
 const printButton = document.getElementById("print");
 const includeCoverInput = document.getElementById("include-cover");
+const showPageButtonInput = document.getElementById("show-page-button");
 
 let currentStatus = null;
+let settings = { ...DEFAULT_SETTINGS };
 
 init();
 
 exportButton.addEventListener("click", () => startExport("pdf"));
 printButton.addEventListener("click", () => startExport("print"));
+showPageButtonInput.addEventListener("change", () => updateSettings({
+  showPageButton: showPageButtonInput.checked
+}));
 
 async function init() {
   try {
+    settings = await loadSettings();
+    showPageButtonInput.checked = settings.showPageButton;
+
     const [tab] = await chromeCall(chrome.tabs, "query", { active: true, currentWindow: true });
     if (!tab?.id) {
       renderUnsupported("No active tab found");
@@ -115,10 +128,10 @@ async function requestPageStatus(tabId, tabUrl) {
 function getMissingContentScriptReason(tabUrl) {
   const route = parseSupportedRoute(tabUrl);
   if (route.supported) {
-    return "Reload this Codeforces problemset page to activate the exporter, then click Download PDF.";
+    return "Reload this Codeforces page to activate the exporter, then click Download PDF.";
   }
 
-  return "Open a complete Codeforces contest, Gym, or group contest problemset page.";
+  return "Open a Codeforces contest, Gym, group problemset, or individual problem page.";
 }
 
 function parseSupportedRoute(rawUrl = "") {
@@ -138,6 +151,39 @@ function parseSupportedRoute(rawUrl = "") {
     supported: /^\/contest\/\d+\/problems$/.test(path)
       || /^\/gym\/\d+\/problems$/.test(path)
       || /^\/group\/[^/]+\/contest\/\d+\/problems$/.test(path)
+      || /^\/contest\/\d+\/problem\/[^/]+$/.test(path)
+      || /^\/gym\/\d+\/problem\/[^/]+$/.test(path)
+      || /^\/group\/[^/]+\/contest\/\d+\/problem\/[^/]+$/.test(path)
+      || /^\/problemset\/problem\/\d+\/[^/]+$/.test(path)
+  };
+}
+
+async function loadSettings() {
+  const stored = await chromeCall(chrome.storage.local, "get", SETTINGS_KEY).catch(() => null);
+  return normalizeSettings(stored?.[SETTINGS_KEY]);
+}
+
+async function updateSettings(patch) {
+  settings = normalizeSettings({ ...settings, ...patch });
+  showPageButtonInput.disabled = true;
+  try {
+    await chromeCall(chrome.storage.local, "set", { [SETTINGS_KEY]: settings });
+    messageEl.textContent = settings.showPageButton
+      ? "Page button will show automatically"
+      : "Page button hidden. Toolbar export still works.";
+  } catch (error) {
+    messageEl.textContent = error?.message || "Could not save setting";
+    settings = await loadSettings();
+    showPageButtonInput.checked = settings.showPageButton;
+  } finally {
+    showPageButtonInput.disabled = false;
+  }
+}
+
+function normalizeSettings(value) {
+  return {
+    ...DEFAULT_SETTINGS,
+    ...(value && typeof value === "object" ? value : {})
   };
 }
 

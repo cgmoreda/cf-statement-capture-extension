@@ -320,7 +320,7 @@ async function requestExtraction(tabId) {
   } catch (error) {
     const message = getErrorMessage(error);
     if (message.includes("Receiving end does not exist") || message.includes("Could not establish connection")) {
-      throw new Error("Open a complete Codeforces contest, Gym, or group contest problemset page before exporting.");
+      throw new Error("Open a Codeforces problemset page or individual problem page before exporting. If the tab was already open, reload it once.");
     }
     throw error;
   }
