@@ -69,7 +69,7 @@ The package command writes a clean extension ZIP under `dist/` using an explicit
 
 ## Release
 
-Release notes for the current public-prep build are in [docs/RELEASE_NOTES_v0.2.3.md](docs/RELEASE_NOTES_v0.2.3.md).
+Release notes for the current public-prep build are in [docs/RELEASE_NOTES_v0.2.4.md](docs/RELEASE_NOTES_v0.2.4.md).
 
 Chrome Web Store listing and permission text are drafted in [docs/CHROME_WEB_STORE.md](docs/CHROME_WEB_STORE.md).
 

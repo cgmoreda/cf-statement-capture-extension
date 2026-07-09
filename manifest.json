@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "CF Gyms Statement Exporter",
   "short_name": "CF Gyms Export",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Export Codeforces contest, Gym, and group contest statements to clean PDFs by ICPC Assiut.",
   "homepage_url": "https://icpcassiut.org",
   "icons": {
