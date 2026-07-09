@@ -4,7 +4,7 @@ This document tracks the store listing and submission details for CF Gyms Statem
 
 ## Current Submission Packet
 
-Status: rejected once for reviewer reproducibility; preparing v0.2.3 resubmission with explicit test instructions.
+Status: v0.2.3 submitted for review on 2026-07-09 after one reviewer reproducibility rejection.
 
 Release ZIP:
 
@@ -70,7 +70,7 @@ Privacy:
 - Temporarily stores extracted statement HTML only inside `chrome.storage.local` during export
 - Removes temporary export data after successful PDF generation
 
-Built by ICPC Assiut for competitive programming education and team training.
+Built by ICPC Assiut for competitive programming education and team training. This extension is not affiliated with Codeforces.
 
 ### Category
 
@@ -152,6 +152,28 @@ If Codeforces or Cloudflare shows a browser check, complete it in the same brows
 ```
 
 ## Rejection Follow-Up
+
+### 2026-07-09 v0.2.3 Resubmission
+
+Dashboard state after submission:
+
+- Version: `0.2.3`
+- Last updated: `9 Jul 2026`
+- Status: `Pending review`
+- Automatic publishing after approval: enabled
+
+Dashboard listing changes:
+
+- Added exact public test URL: `https://codeforces.com/contest/1999/problems`
+- Added supported URL formats.
+- Added reload note for Codeforces tabs that were already open before extension installation or reload.
+- Added Codeforces non-affiliation note.
+
+Reviewer instructions entered in the 500-character dashboard field:
+
+```text
+No credentials required. Install extension, open https://codeforces.com/contest/1999/problems, reload the tab if it was open before install, wait for the bottom-right CF Statements panel to show 8 statements detected, then click Export PDF. Expected: Chrome downloads contest-1999-Codeforces Round 964 (Div. 4).pdf. Popup also works on the same page via toolbar icon > Download PDF. Only complete problemset pages are supported.
+```
 
 ### 2026-07-09 Red Potassium
 
@@ -274,10 +296,10 @@ Prepared promo images:
 
 Dashboard-only remaining steps:
 
-- [ ] Sign in to the Chrome Web Store Developer Dashboard.
-- [ ] Upload `dist/cf-gyms-statement-exporter-v0.2.3.zip`.
-- [ ] Enter listing text, screenshots, icon, and promo tile.
-- [ ] Enter reviewer test instructions from this document.
-- [ ] Enter privacy fields using this document.
-- [ ] Enter distribution settings.
-- [ ] Submit for review, preferably with deferred publishing if available.
+- [x] Sign in to the Chrome Web Store Developer Dashboard.
+- [x] Upload `dist/cf-gyms-statement-exporter-v0.2.3.zip`.
+- [x] Enter listing text, screenshots, icon, and promo tile.
+- [x] Enter reviewer test instructions from this document.
+- [x] Enter privacy fields using this document.
+- [x] Enter distribution settings.
+- [x] Submit for review with automatic publishing after approval enabled.
