@@ -4,11 +4,11 @@ This document tracks the store listing and submission details for CF Gyms Statem
 
 ## Current Submission Packet
 
-Status: ready for Chrome Web Store dashboard entry.
+Status: rejected once for reviewer reproducibility; preparing v0.2.3 resubmission with explicit test instructions.
 
 Release ZIP:
 
-- `dist/cf-gyms-statement-exporter-v0.2.2.zip`
+- `dist/cf-gyms-statement-exporter-v0.2.3.zip`
 
 Graphics:
 
@@ -47,13 +47,21 @@ Export Codeforces contest, Gym, and group contest statements to clean printable 
 
 CF Gyms Statement Exporter helps competitive programming teams create printable problem sets directly from the browser.
 
-Open a supported Codeforces problemset page, click Export PDF, and the extension generates a clean A4 PDF using your current browser session. This avoids server-side scraping, login duplication, and Cloudflare issues.
+Open a supported Codeforces problemset page, such as `https://codeforces.com/contest/1999/problems`, click Export PDF, and the extension generates a clean A4 PDF using your current browser session. This avoids server-side scraping, login duplication, and Cloudflare issues.
 
 Supported pages:
 
 - Codeforces contest problemsets
 - Codeforces Gym problemsets
 - Codeforces group contest problemsets
+
+Supported URL formats:
+
+- `https://codeforces.com/contest/:contestId/problems`
+- `https://codeforces.com/gym/:gymId/problems`
+- `https://codeforces.com/group/:groupId/contest/:contestId/problems`
+
+If a Codeforces tab was already open before installing or reloading the extension, reload that tab once so Chrome activates the extension on the page.
 
 Privacy:
 
@@ -107,6 +115,77 @@ Use the GitHub issues URL if the dashboard rejects `mailto:` URLs.
 - Regions: all regions, unless a specific region restriction is needed later
 - Pricing: free
 - In-app purchases: none
+
+## Reviewer Test Instructions
+
+Use this text in `Access > Test instructions`.
+
+```text
+No credentials are required for the public test case.
+
+Primary test:
+
+1. Install the extension.
+2. Open https://codeforces.com/contest/1999/problems in a normal Chrome tab.
+3. If the tab was already open before installing the extension, reload the tab once.
+4. Wait for the bottom-right "CF Statements" panel to show "8 statements detected".
+5. Click "Export PDF" in that panel.
+6. Expected result: Chrome downloads a PDF named similar to "contest-1999-Codeforces Round 964 (Div. 4).pdf".
+
+Popup test:
+
+1. Open https://codeforces.com/contest/1999/problems.
+2. Click the extension toolbar icon.
+3. Expected result: the popup shows the contest type, 8 statements, and a "Download PDF" button.
+4. Click "Download PDF".
+5. Expected result: the same PDF is saved to Chrome's downloads folder.
+
+Supported page formats:
+
+- https://codeforces.com/contest/:contestId/problems
+- https://codeforces.com/gym/:gymId/problems
+- https://codeforces.com/group/:groupId/contest/:contestId/problems
+
+The extension intentionally does not export individual problem pages such as /contest/:id/problem/A. It exports complete problemset pages.
+
+If Codeforces or Cloudflare shows a browser check, complete it in the same browser tab and reload the problemset page. The extension uses the current browser session and does not use a backend.
+```
+
+## Rejection Follow-Up
+
+### 2026-07-09 Red Potassium
+
+Chrome Web Store rejected v0.2.2 with:
+
+> Inaccurate Description - Non functional
+
+The cited statement was:
+
+> Export complete Codeforces contest, Gym, and group contest problemset pages into a clean printable PDF in the browser.
+
+Local clean-profile reproduction after the rejection:
+
+- Browser: Chrome for Testing 150
+- Extension source: unpacked v0.2.2 repository
+- URL: `https://codeforces.com/contest/1999/problems`
+- Action: clicked the injected `Export PDF` panel button
+- Result: Chrome downloaded `contest-1999-Codeforces Round 964 (Div. 4).pdf`
+
+Likely reviewer gap: the reviewer may have installed/reloaded the extension while a Codeforces tab was already open, in which case Chrome does not inject manifest content scripts into that existing tab until reload. v0.2.3 adds explicit popup guidance for that case and this document now includes exact test instructions.
+
+Appeal/resubmission note:
+
+```text
+The export functionality is reproducible on a public Codeforces page with no credentials:
+
+1. Install the extension.
+2. Open https://codeforces.com/contest/1999/problems.
+3. If the page was already open before installation, reload it once.
+4. Click the bottom-right "Export PDF" button.
+5. Chrome downloads "contest-1999-Codeforces Round 964 (Div. 4).pdf".
+
+I reproduced this in a clean Chrome profile after receiving the rejection. The extension intentionally supports complete problemset pages only, not individual /problem/ pages. I have also added reviewer test instructions and popup guidance clarifying that an already-open Codeforces tab must be reloaded after installation so the content script can run.
+```
 
 ## Permission Justification
 
@@ -196,8 +275,9 @@ Prepared promo images:
 Dashboard-only remaining steps:
 
 - [ ] Sign in to the Chrome Web Store Developer Dashboard.
-- [ ] Upload `dist/cf-gyms-statement-exporter-v0.2.2.zip`.
+- [ ] Upload `dist/cf-gyms-statement-exporter-v0.2.3.zip`.
 - [ ] Enter listing text, screenshots, icon, and promo tile.
+- [ ] Enter reviewer test instructions from this document.
 - [ ] Enter privacy fields using this document.
 - [ ] Enter distribution settings.
 - [ ] Submit for review, preferably with deferred publishing if available.

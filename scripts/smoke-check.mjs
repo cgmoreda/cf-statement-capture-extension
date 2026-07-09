@@ -57,6 +57,16 @@ for (const pattern of [
   assert(content.includes(pattern), `Content script missing ${pattern}`);
 }
 
+const popup = fs.readFileSync(path.join(root, "src/popup/popup.js"), "utf8");
+for (const token of [
+  "Reload this Codeforces problemset page",
+  "/^\\/contest\\/\\d+\\/problems$/",
+  "/^\\/gym\\/\\d+\\/problems$/",
+  "/^\\/group\\/[^/]+\\/contest\\/\\d+\\/problems$/"
+]) {
+  assert(popup.includes(token), `Popup missing ${token}`);
+}
+
 const background = fs.readFileSync(path.join(root, "src/background/service-worker.js"), "utf8");
 for (const token of [
   "Page.printToPDF",

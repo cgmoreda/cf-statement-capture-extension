@@ -25,7 +25,7 @@ async function init() {
       return;
     }
 
-    const response = await requestPageStatus(tab.id);
+    const response = await requestPageStatus(tab.id, tab.url);
     if (!response?.ok) {
       renderUnsupported(response?.error || "Could not inspect this tab");
       return;
@@ -94,7 +94,7 @@ function setBusy(isBusy, text = "") {
   if (text) messageEl.textContent = text;
 }
 
-async function requestPageStatus(tabId) {
+async function requestPageStatus(tabId, tabUrl) {
   try {
     return await chromeCall(chrome.tabs, "sendMessage", tabId, { type: MESSAGE.GET_STATUS });
   } catch (error) {
@@ -104,12 +104,41 @@ async function requestPageStatus(tabId) {
         ok: true,
         status: {
           supported: false,
-          reason: "Open a complete Codeforces contest, Gym, or group contest problemset page"
+          reason: getMissingContentScriptReason(tabUrl)
         }
       };
     }
     throw error;
   }
+}
+
+function getMissingContentScriptReason(tabUrl) {
+  const route = parseSupportedRoute(tabUrl);
+  if (route.supported) {
+    return "Reload this Codeforces problemset page to activate the exporter, then click Download PDF.";
+  }
+
+  return "Open a complete Codeforces contest, Gym, or group contest problemset page.";
+}
+
+function parseSupportedRoute(rawUrl = "") {
+  let url;
+  try {
+    url = new URL(rawUrl);
+  } catch {
+    return { supported: false };
+  }
+
+  if (url.hostname !== "codeforces.com") {
+    return { supported: false };
+  }
+
+  const path = url.pathname.replace(/\/+$/, "");
+  return {
+    supported: /^\/contest\/\d+\/problems$/.test(path)
+      || /^\/gym\/\d+\/problems$/.test(path)
+      || /^\/group\/[^/]+\/contest\/\d+\/problems$/.test(path)
+  };
 }
 
 function chromeCall(target, method, ...args) {
